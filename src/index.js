@@ -82,87 +82,71 @@ function create() {
 
   const hammer = this.matter.add.image(start.x, start.y, 'hammer', null, {
     label: 'Composite hammer',
-    // parts: [
-    //   hammerHead,
-    //   hammerHandle
-    // ]//,
+    parts: [
+      hammerHead,
+      hammerHandle
+    ]//,
     //density: 0,
     //isSensor: true
   });
   // Matter.Body.translate(hammer.body, start);
-/*
-  const nail = this.matter.add.image(500, 500, 'nail', null, {
-    label: 'Nail',
-    onCollideCallback: (pair) => console.log(pair)
-  });
-  nail.setScale(0.1);
-*/
+
+const nail = this.matter.add.image(500, 500, 'nail', null, {
+  label: 'Nail',
+  onCollideCallback: (pair) => console.log(pair)
+});
+nail.setScale(0.1);
+
 
   // const hammerScale = 0.5;
   // hammer.setDisplaySize(50,25);
   // Matter.Body.scale(hammer.body, hammerScale, hammerScale)
 
-  // const hand = this.matter.add.image(start.x, start.y, 'hand', null, {
-  //   density: 0,
-  //   ignoreGravity: true,
-  //   collisionFilter: {
-  //     mask: 0
-  //   }/*,
-  //   isSensor: true*/
-  // });
-  // Matter.Body.setStatic(hand.body, true);
-
-  /*
-  // add mouse control
-  var mouse = Mouse.create(render.canvas),
-  mouseConstraint = MouseConstraint.create(engine, {
-      mouse: mouse,
-      constraint: {
-          stiffness: 0.2,
-          render: {
-              visible: false
-          }
-      }
+  const hand = this.matter.add.image(start.x, start.y, 'hand', null, {
+    density: 0,
+    ignoreGravity: true,
+    collisionFilter: {
+      mask: 0
+    }/*,
+    isSensor: true*/
   });
-
-  World.add(world, mouseConstraint);
- */
+  Matter.Body.setStatic(hand.body, true);
 
   //var handAndHammer = new Composite.create({label: 'Hand and Hammer'});
 
-  
-  // const hammerConstraint = Constraint.create({
-  //   bodyA: hand.body,
-  //   //pointA: {x: 0, y: 0},
-  //   bodyB: hammer.body,
-  //   pointB: {x: -(hammerWidth / 2), y: 0},
-  //   stiffness: 0.7,
-  //   length: 0/*,
-  //   damping: 0.1*/
-  // });
 
-  // World.add(this.matter.world.localWorld, [hammerConstraint]);
+  const hammerConstraint = Constraint.create({
+    bodyA: hand.body,
+    //pointA: {x: 0, y: 0},
+    bodyB: hammer.body,
+    pointB: {x: -(hammerWidth / 2), y: 0},
+    stiffness: 0.7,
+    length: 0/*,
+    damping: 0.1*/
+  });
+
+  World.add(this.matter.world.localWorld, [hammerConstraint]);
 
   // Pointer lock will only work after an 'engagement gesture', e.g. mousedown, keypress, etc.
-  // this.input.on('pointerdown', function (pointer) {
-  //   this.input.mouse.requestPointerLock();
-  // }, this);
+  this.input.on('pointerdown', function (pointer) {
+    this.input.mouse.requestPointerLock();
+  }, this);
 
   // When locked, you will have to use the movementX and movementY properties of the pointer
   // (since a locked cursor's xy position does not update)
-  // this.input.on('pointermove', function (pointer) {
-  //   if (this.input.mouse.locked) {
-  //       const marginX = hand.width / 2;
-  //       const marginY = hand.height / 2;
+  this.input.on('pointermove', function (pointer) {
+    if (this.input.mouse.locked) {
+        const marginX = hand.width / 2;
+        const marginY = hand.height / 2;
 
-  //       /*
-  //       hammerConstraint.pointA.x = Math.max(0 + marginX, Math.min(pointer.movementX + hammerConstraint.pointA.x, WORLD_WIDTH - marginX));
-  //       hammerConstraint.pointA.y = Math.max(0 + marginY, Math.min(pointer.movementY + hammerConstraint.pointA.y, WORLD_HEIGHT - marginY));
-  //       */
+        /*
+        hammerConstraint.pointA.x = Math.max(0 + marginX, Math.min(pointer.movementX + hammerConstraint.pointA.x, WORLD_WIDTH - marginX));
+        hammerConstraint.pointA.y = Math.max(0 + marginY, Math.min(pointer.movementY + hammerConstraint.pointA.y, WORLD_HEIGHT - marginY));
+        */
 
-  //       //Matter.Body.translate(hand.body, {x: pointer.movementX, y: pointer.movementY})
-  //       hand.x = Math.max(0 + marginX, Math.min(pointer.movementX + hand.x, WORLD_WIDTH - marginX));
-  //       hand.y = Math.max(0 + marginY, Math.min(pointer.movementY + hand.y, WORLD_HEIGHT - marginY));
-  //   }
-  // }, this);
+        //Matter.Body.translate(hand.body, {x: pointer.movementX, y: pointer.movementY})
+        hand.x = Math.max(0 + marginX, Math.min(pointer.movementX + hand.x, WORLD_WIDTH - marginX));
+        hand.y = Math.max(0 + marginY, Math.min(pointer.movementY + hand.y, WORLD_HEIGHT - marginY));
+    }
+  }, this);
 }
